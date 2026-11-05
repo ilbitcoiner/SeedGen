@@ -10,7 +10,16 @@ Questo repository è un fork di [SatoSats/SeedGen](https://github.com/SatoSats/S
 
 La distribuzione di questo fork riguarda **esclusivamente lo schermo piccolo 240×240**. SeedSigner Plus / 320×240 non fa parte della release.
 
-**Stato della release:** sorgenti, checksum, firma e chiave pubblica sono disponibili. L’immagine ricevuta dal manutentore è stata confrontata con i sorgenti del frontend e la firma è stata verificata. Il caricamento dell’immagine e degli asset nella pagina Releases resta da completare: finché non sono presenti lì, il download dell’immagine non è ancora pubblicato.
+**Release pubblicata:** [SEEDGEN Pi V9 — 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9). I quattro asset pubblicati corrispondono, per dimensioni e SHA-256 riportati da GitHub, ai file verificati: immagine, manifest firmato, firma e chiave pubblica.
+
+### Download
+
+- [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/seedgen_os.v1.0.2.pi0.v9.img)
+- [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/SHA256SUMS)
+- [Firma SHA256SUMS.asc](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/SHA256SUMS.asc)
+- [Chiave pubblica del manutentore](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/SEEDGEN-Pi-release-key.asc)
+
+Prima di scrivere la SD, [verificare fingerprint, firma e checksum](docs/VERIFICA.md).
 
 [Checksum, firma e chiave pubblica](docs/releases/pi-v9/) · [Esito della verifica dell’immagine](docs/releases/pi-v9/IMAGE-VERIFICATION.md)
 
@@ -43,7 +52,7 @@ Non usare questa immagine come profilo per Pi Zero 2 W, Pi 4/5, Luckfox o SeedSi
 
 ## Iniziare
 
-Quando la release sarà completa:
+La release [Pi V9](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9) è disponibile:
 
 1. Scaricare immagine, `SHA256SUMS`, `SHA256SUMS.asc` e chiave pubblica dalla stessa release.
 2. [Verificare firma, fingerprint e checksum](docs/VERIFICA.md).

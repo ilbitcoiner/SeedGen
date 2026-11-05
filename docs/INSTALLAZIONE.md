@@ -6,9 +6,9 @@ Aprire [Releases](https://github.com/ilbitcoiner/SeedGen/releases). Cercare la r
 
 - `seedgen_os.v1.0.2.pi0.v9.img`;
 - `SHA256SUMS` e `SHA256SUMS.asc`;
-- `SEEDGEN-Pi-release-key.asc` e fingerprint pubblicato nelle note.
+- `SEEDGEN-Pi-release-key.asc`; il fingerprint completo è pubblicato nelle note della release e nel repository.
 
-Se questi asset non sono ancora presenti, la release non è completa. Gli archivi automatici GitHub “Source code” contengono sorgenti, non la SD pronta. Non usare vecchi binari Linux x86_64 ereditati dall’upstream sul Raspberry.
+La release Pi V9 è pubblicata con questi quattro asset. Gli archivi automatici GitHub “Source code” contengono sorgenti, non la SD pronta. Non usare vecchi binari Linux x86_64 ereditati dall’upstream sul Raspberry.
 
 ## Verifica e scrittura
 
