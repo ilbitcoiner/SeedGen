@@ -26,3 +26,12 @@ seedgen-v*-linux-x86_64
 # Test locali
 TEST/
 test/
+
+# Raspberry build outputs and local release preparation
+.venv/
+raspberry/240x240/work/
+raspberry/240x240/images/
+*.img
+*.img.xz
+*.img.gz
+!docs/upstream/chiave_pubblica_gpg.asc

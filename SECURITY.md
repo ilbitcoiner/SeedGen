@@ -1,88 +1,23 @@
-# SECURITY POLICY - SEEDGEN v1.0.2
+# Sicurezza del fork Raspberry
 
-## Versione supportata
+Questa pagina riguarda SEEDGEN Pi V9. Il documento originale CLI/Linux è conservato in `docs/upstream/SECURITY.md` e non descrive da solo il frontend LCD.
 
-La versione attuale supportata è:
+## Stato e limiti
 
-| Versione | Stato |
-|----------|-------|
-| v1.0.2 | ✅ Versione corrente |
+V9 è la versione selezionata dal manutentore dopo prove funzionali. Non è dichiarato un audit di sicurezza indipendente. Test automatici, firma di una release e approvazione dell’interfaccia hanno scopi differenti e non dimostrano la sicurezza complessiva.
 
-Le versioni precedenti alla serie v1.0.0 non fanno parte della distribuzione corrente.
+- L’entropia primaria è inserita da dadi fisici D6. Dadi non equi, lanci dipendenti o input scelti intenzionalmente possono compromettere il risultato.
+- Il controllo diagnostico dei lanci non misura l’entropia. Il rejection sampling del decoder evita il bias della semplice riduzione modulo, ma il filtro preliminare condiziona i blocchi accettati; non si dichiara uniformità esatta dell’intero processo filtrato.
+- Il frontend verifica hash del core/dizionari e richiede PASS per tutti i self-test previsti. Il controllo non certifica un sistema operativo o hardware affidabile.
+- Prima della generazione/verifica controlla passivamente rete e swap; non effettua il controllo attivo di raggiungibilità del launcher CLI originale. Un sistema compromesso può alterare o aggirare questi controlli.
+- Nessun segreto è intenzionalmente salvato o stampato dal frontend. CPython non garantisce la cancellazione sicura dalla RAM; log, crash, sistema operativo e accesso fisico richiedono valutazione separata.
+- Le wordlist restano inglesi. Diceware BIP39 è una password, non una mnemonic con checksum.
+- L’assenza di derivazione indirizzi, saldi e firma transazioni significa che SEEDGEN non è un wallet.
 
-## Segnalazione di vulnerabilità
+## Segnalazioni
 
-Per segnalare una vulnerabilità di sicurezza, non aprire una issue pubblica con dettagli tecnici sfruttabili.
+Per problemi funzionali pubblicare soltanto dati di prova nel repository del fork. **Mai allegare seed, password, chiavi private o dati di produzione.** Per una vulnerabilità sensibile verificare prima se GitHub mostra un canale di segnalazione privata nel repository; altrimenti concordare privatamente con il manutentore un canale adatto prima di divulgarne i dettagli. Non sono promessi tempi di risposta o un canale privato che non risulti configurato.
 
-Utilizzare il canale privato di sicurezza disponibile nel repository GitHub.
+## Release
 
-Fornire, quando possibile:
-
-- descrizione del problema;
-- versione interessata;
-- procedura per riprodurlo;
-- eventuali messaggi di errore;
-- impatto osservato.
-
-## Tempi di risposta
-
-- Conferma della ricezione: entro 48 ore.
-- Prima valutazione: entro 7 giorni.
-- Correzione: in funzione della severità e della complessità del problema.
-
-## Divulgazione coordinata
-
-Quando una vulnerabilità viene confermata:
-
-1. il problema viene analizzato privatamente;
-2. viene preparata una correzione;
-3. la correzione viene verificata;
-4. viene pubblicata una nuova versione quando necessario;
-5. la vulnerabilità può essere resa pubblica dopo la disponibilità della correzione.
-
-## Integrità delle release
-
-Le release pubblicate devono essere considerate immutabili.
-
-Una correzione che modifica il software deve produrre una nuova versione.
-
-Gli asset di una release già pubblicata non devono essere sostituiti con file differenti.
-
-## Firma e verifica
-
-Le release ufficiali devono essere accompagnate dai relativi dati di integrità e, quando previsto, dalla firma GPG.
-
-La chiave pubblica utilizzata per la verifica è distribuita nel repository tramite:
-
-    chiave_pubblica_gpg.asc
-
-Prima di utilizzare una release destinata a fondi reali, verificare sempre:
-
-- autenticità della firma;
-- SHA-256 dell'artefatto;
-- corrispondenza della versione;
-- provenienza del pacchetto.
-
-## Limitazioni
-
-SeedGen è uno strumento per la generazione di segreti e non è un wallet.
-
-La sicurezza complessiva dipende anche da:
-
-- hardware utilizzato;
-- sistema operativo;
-- ambiente di esecuzione;
-- procedura di generazione;
-- gestione e conservazione del segreto generato.
-
-Per fondi reali è raccomandato utilizzare un ambiente offline e affidabile.
-
-Prima del menu principale, SeedGen verifica se Internet è raggiungibile. Se rileva una connessione, avvisa l'utente e permette di continuare consapevolmente oppure chiudere il programma. Il controllo non trasmette mnemonic, passphrase o altri segreti.
-
-## Principio di sicurezza
-
-SeedGen è progettato per generare l'entropia del segreto a partire da lanci fisici di dadi D6.
-
-Il programma non utilizza un RNG software per generare il segreto.
-
-La conversione dei lanci utilizza rejection sampling per evitare bias nell'estrazione dell'entropia.
+Le immagini Raspberry devono avere manifest SHA-256 e firma del manutentore. La chiave ereditata dall’upstream, conservata in `docs/upstream/`, non firma questi artefatti. Confrontare fingerprint e firma seguendo `docs/VERIFICA.md`. Una release pubblicata è immutabile: un cambiamento di immagine richiede una nuova versione.

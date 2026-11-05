@@ -1,196 +1,51 @@
-# BUILD - SEEDGEN v1.0.2
+# Compilare SEEDGEN Pi V9 (240×240)
 
-## 1. Scopo
+Questo documento riguarda il fork Raspberry. La guida CLI/Linux originale è in [docs/upstream/BUILD.md](docs/upstream/BUILD.md).
 
-Questo documento descrive la procedura congelata per ricostruire il binario Linux x86_64 della release SeedGen v1.0.2 a partire dal sorgente identificato dall'hash riportato di seguito.
+## Requisiti
 
-La build utilizza PyInstaller e produce un singolo eseguibile.
+Git, Docker con Compose e `shasum`. Su Mac: Docker Desktop avviato, Terminale e connessione Internet stabile. Su Apple silicon lo script usa `linux/amd64`; la compilazione emulata può richiedere diverse ore. Non c’è una stima affidabile valida per ogni computer. Lasciare spazio libero sufficiente per Buildroot e Docker; lo script non ripulisce automaticamente il disco del computer.
 
-## 2. Requisiti
+## Da un clone nuovo
 
-Sono richiesti:
+```bash
+git clone https://github.com/ilbitcoiner/SeedGen.git
+cd SeedGen/raspberry/240x240
+caffeinate -i bash build-v9.sh
+```
 
-- Linux x86_64;
-- Python 3;
-- PyInstaller;
-- `sha256sum`;
-- `readelf`;
-- il sorgente `seedgen.py`;
-- le wordlist del progetto.
+Su Linux sostituire l’ultima riga con `bash build-v9.sh`. È necessario partire dalla cartella `raspberry/240x240`: lo script usa la directory corrente come base.
 
-Per verificare Python:
+Lo script scarica SeedGen v1.0.2, SeedSigner OS 0.8.7 e SeedSigner 0.8.7, verifica il core vendorizzato, prepara l’overlay con frontend/font/dizionari, porta l’immagine a 128 MiB e avvia Buildroot con `--pi0 --skip-repo`.
 
-    python3 --version
+L’applicazione nella SD viene installata in `/opt/src/`; il suo entrypoint è il `main.py` di questo profilo. Il repository SeedSigner scaricato serve per dipendenze e driver; il menu avviato è quello di SEEDGEN.
 
-Per verificare PyInstaller:
+## Risultato
 
-    pyinstaller --version
+Attendere **`[8/8] DONE`** e l’uscita del contenitore con codice 0. Solo allora utilizzare:
 
-## 3. Sorgente congelato
+```text
+raspberry/240x240/images/seedgen_os.v1.0.2.pi0.v9.img
+```
 
-La release v1.0.2 utilizza il seguente sorgente:
+`images/SHA256SUMS-v9` è il checksum locale della build; può contenere un percorso assoluto. Per la release si prepara un manifest portabile con soli nomi di file, come descritto in [RELEASE.md](docs/RELEASE.md).
 
-    seedgen.py
+## Ripetere una build
 
-SHA-256 del sorgente:
+Non avviare due build nella stessa cartella. Docker viene ricreato e lo script upstream può cancellare `/output`: anche un nuovo tentativo può ricompilare tutto. La presenza di `work/` non garantisce una ripresa rapida.
 
-    a347d11ec5d23dac0799c5d19ef5495d74b744e479eb67e706c0a7ad62c2564b
+Una build fallita non produce una nuova immagine valida; un file rimasto in `images/` potrebbe essere una build precedente. Controllare sempre il messaggio finale e il percorso stampato dal tentativo corrente.
 
-Lo script `build.sh` verifica automaticamente questo hash prima di avviare la compilazione.
+## Problemi già incontrati
 
-Se l'hash non corrisponde, la build viene interrotta.
+- `unable to resolve host address`: controllare prima Internet sul Mac, incluso l’hotspot. Se il Mac naviga ma Docker no, riavviare Docker Desktop e riprovare. Tenere il Raspberry scollegato durante la build, per evitare instradamenti tramite USB gadget.
+- `Cannot connect to Docker daemon`: avviare Docker Desktop e attendere che sia pronto.
+- Avviso piattaforma amd64/arm64: la build su Apple silicon usa l’emulazione amd64.
+- `Disk full` nella creazione FAT: verificare che il post-image contenga `count=128`, come applicato da questo script. Controllare separatamente spazio disco e spazio Docker.
+- `cannot stat package/initscripts/init.d/*`: verificare che `rcS` e `rcK` esistano sia sul Mac sia nel contenitore; non cancellare sorgenti o cache alla cieca.
 
-Il branch `main` può contenere modifiche successive non ancora rilasciate. In tal caso è intenzionale che `build.sh` rifiuti il sorgente corrente: lo script resta congelato sulla release v1.0.2 finché non viene deliberata e preparata una nuova release.
+## Riproducibilità e test
 
-## 4. Build
+Le versioni nominali delle sorgenti sono fissate, ma gli script non verificano l’hash di ogni dipendenza transitiva e non garantiscono build bit-per-bit riproducibili. `SS_TAG` e altre variabili possono alterare la build: per la release usare i valori predefiniti e registrare i commit effettivi.
 
-Dalla directory principale del repository:
-
-    cd ~/Documenti/SeedGen
-
-eseguire:
-
-    ./build.sh
-
-Lo script:
-
-1. verifica l'hash di `seedgen.py`;
-2. imposta `PYTHONHASHSEED=1`;
-3. crea una directory temporanea di build;
-4. esegue PyInstaller;
-5. produce un singolo binario Linux x86_64;
-6. calcola lo SHA-256 del binario.
-
-La directory temporanea utilizzata è:
-
-    /tmp/seedgen-v1.0.2-build-scripted
-
-Il binario prodotto è:
-
-    /tmp/seedgen-v1.0.2-build-scripted/dist/seedgen-v1.0.2-linux-x86_64
-
-## 5. Verifica del binario
-
-Dopo la build:
-
-    ls -lh /tmp/seedgen-v1.0.2-build-scripted/dist/
-
-Calcolare l'hash:
-
-    sha256sum /tmp/seedgen-v1.0.2-build-scripted/dist/seedgen-v1.0.2-linux-x86_64
-
-Per la build di riferimento v1.0.2 l'hash del binario è:
-
-    9f90c5566eb21b0ef3e9766378ea33db406a85623d2855e8b4078e682519765f
-
-## 6. Verifica dell'architettura
-
-Verificare l'architettura del sistema:
-
-    uname -m
-
-La build v1.0.2 è destinata a:
-
-    x86_64
-
-Verificare anche il tipo di file:
-
-    file /tmp/seedgen-v1.0.2-build-scripted/dist/seedgen-v1.0.2-linux-x86_64
-
-### Verifica requisito GLIBC
-
-Il requisito GLIBC non deve essere ricavato controllando soltanto l'eseguibile ELF esterno prodotto da PyInstaller.
-
-Una build `--onefile` contiene infatti librerie native incorporate che possono richiedere versioni GLIBC più recenti rispetto al bootloader esterno.
-
-Estrarre quindi tutti i componenti PyInstaller di tipo binario in una directory temporanea e controllare ciascun file con `readelf`.
-
-Per la build v1.0.2 sono stati verificati tutti i 20 componenti binari incorporati.
-
-Il simbolo GLIBC più recente richiesto è:
-
-    GLIBC_2.38
-
-Il requisito minimo del launcher è quindi GLIBC 2.38.
-
-In particolare, nella build di riferimento richiedono `GLIBC_2.38`:
-
-- `libpython3.12.so.1.0`;
-- `libcrypto.so.3`;
-- `libexpat.so.1`;
-- `python3.12/lib-dynload/_decimal.cpython-312-x86_64-linux-gnu.so`.
-
-Questo audit deve essere ripetuto integralmente su ogni nuova build. Non è sufficiente controllare il solo ELF esterno e il requisito non deve essere dedotto dalla sola versione GLIBC del sistema usato per compilare.
-
-## 7. Test del binario
-
-Il binario richiede le wordlist del progetto.
-
-Per eseguire il test dalla directory del repository, copiare il binario nella directory corrente:
-
-    cp /tmp/seedgen-v1.0.2-build-scripted/dist/seedgen-v1.0.2-linux-x86_64 .
-
-quindi avviarlo:
-
-    ./seedgen-v1.0.2-linux-x86_64
-
-Il programma deve avviarsi correttamente e completare i propri self-test prima di permettere la generazione.
-
-## 8. Installazione
-
-L'installer previsto per la release v1.0.2 è:
-
-    INSTALLA_SEEDGEN.sh
-
-Dalla directory contenente il binario e i file del progetto:
-
-    ./INSTALLA_SEEDGEN.sh
-
-L'installer copia i componenti necessari nell'installazione locale dell'utente e crea il launcher nel menu Applicazioni.
-
-## 9. Riproducibilità della build
-
-La build v1.0.2 è associata a:
-
-- versione sorgente;
-- hash SHA-256 del sorgente;
-- configurazione di build;
-- versione del binario;
-- hash SHA-256 del binario.
-
-L'hash del sorgente deve essere verificato prima della compilazione.
-
-L'hash del binario deve essere verificato dopo la compilazione.
-
-Una differenza nell'hash indica che il risultato non corrisponde al binario di riferimento e deve essere analizzato prima della distribuzione.
-
-## 10. Release
-
-La release ufficiale deve essere costruita a partire dal sorgente verificato.
-
-Prima della pubblicazione verificare:
-
-1. versione del programma;
-2. hash del sorgente;
-3. build completata senza errori;
-4. hash del binario;
-5. architettura del binario;
-6. avvio del programma;
-7. self-test;
-8. presenza delle wordlist richieste;
-9. funzionamento dell'installer;
-10. funzionamento del launcher.
-
-## 11. Identità della release
-
-Versione:
-
-    1.0.2
-
-SHA-256 sorgente:
-
-    a347d11ec5d23dac0799c5d19ef5495d74b744e479eb67e706c0a7ad62c2564b
-
-SHA-256 binario Linux x86_64:
-
-    9f90c5566eb21b0ef3e9766378ea33db406a85623d2855e8b4078e682519765f
+[Test host e verifica del sorgente](docs/TEST.md). La build completa e l’avvio fisico non vengono eseguiti dai test host.

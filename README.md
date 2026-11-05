@@ -1,53 +1,80 @@
-# SeedGen v1.0.2
+# SEEDGEN per Raspberry Pi — by Bitvero
 
-SeedGen è un generatore di mnemonic BIP39 e passphrase Diceware opzionali, progettato per essere utilizzato offline.
+Generatore di seed BIP39 e password da **soli dadi fisici D6**, con interfaccia per Raspberry Pi Zero e schermo 240×240.
 
-SeedGen non è un wallet. Non conserva fondi, non deriva indirizzi e non firma transazioni. Non trasmette mnemonic, passphrase o altri segreti in rete. Il controllo iniziale della raggiungibilità Internet può effettuare brevi tentativi di connessione TCP verso endpoint pubblici sulla porta 443.
+Questo repository è un fork di [SatoSats/SeedGen](https://github.com/SatoSats/SeedGen). Il progetto originale e la sua cronologia sono conservati. Il porting Raspberry, l’interfaccia e le estensioni sono il contributo di **Andrea (@ilbitcoiner) / Bitvero**. Non è una release ufficiale di SeedSigner o del progetto originale.
 
-## Installazione Linux
+## Versione corrente
 
-Eseguire:
+**SEEDGEN Pi V9**, basata sul core SeedGen **v1.0.2**. V9 è la versione selezionata dopo le prove funzionali del manutentore; non indica un audit di sicurezza indipendente.
 
-    ./INSTALLA_SEEDGEN.sh
+La distribuzione di questo fork riguarda **esclusivamente lo schermo piccolo 240×240**. SeedSigner Plus / 320×240 non fa parte della release.
 
-L'installer installa SeedGen in ~/.local/share/seedgen e crea il launcher nel menu Applicazioni.
+**Stato della release:** i sorgenti sono disponibili. L’immagine compilata sul Mac del manutentore, i checksum e la sua firma devono ancora essere caricati. Finché non sono presenti gli asset nella pagina Releases, non esiste un download dell’immagine pronto all’uso.
 
-Il binario Linux x86_64 della release v1.0.2 richiede GLIBC 2.38 o successiva. Il launcher corrente verifica la versione GLIBC rilevata prima di avviare il binario e, se è troppo vecchia, mostra un messaggio di incompatibilità.
+[Release e download](https://github.com/ilbitcoiner/SeedGen/releases) · [Installazione](docs/INSTALLAZIONE.md) · [Uso](docs/USO.md) · [Compilazione](BUILD.md) · [Verifica e firme](docs/VERIFICA.md)
 
-## Avvio
+## Hardware
 
-SeedGen può essere avviato dal menu Applicazioni oppure tramite AVVIA_SEEDGEN.sh.
+| Componente | Profilo di questa versione |
+|---|---|
+| Scheda | Raspberry Pi Zero originale v1.3, ARMv6 |
+| Schermo | Waveshare 1,3" ST7789, 240×240 |
+| Comandi | Joystick a cinque direzioni e KEY1 / KEY2 / KEY3 |
+| Supporto | microSD dedicata |
 
-Dopo i self-test e prima del menu principale, SeedGen controlla se Internet è raggiungibile. Se rileva una connessione, avvisa l'utente e permette di continuare consapevolmente oppure chiudere SeedGen. Se Internet non viene rilevato, il menu principale viene mostrato senza alcun avviso.
+Non usare questa immagine come profilo per Pi Zero 2 W, Pi 4/5, Luckfox o SeedSigner Plus. [Piedinatura](docs/HARDWARE.md).
 
-## Generazione
+## Cosa offre
 
-SeedGen utilizza entropia fisica ottenuta da dadi D6 e rejection sampling.
+- **Seed BIP39:** 12, 15, 18, 21 o 24 parole, con controllo checksum e verifica della trascrizione.
+- **Password:** soltanto Custom, Diceware classico (6–9 parole) e Diceware BIP39.
+- **Verifica:** inserimento e controllo di una mnemonic BIP39.
+- **Strumenti:** integrità, Audit Mode, test pulsanti, lingua e spegnimento.
+- Interfaccia con caratteri grandi, riquadri blu, selezione arancione e avvio **SEEDGEN — by Bitvero**.
+- Freccia Indietro selezionabile con il joystick e Power in alto a destra, con conferma.
+- Italiano, inglese, francese e spagnolo per l’interfaccia. La lingua torna italiano al riavvio; le wordlist restano inglesi.
 
-Sono supportate le lunghezze BIP39 standard da 128 a 256 bit.
+**Diceware BIP39 genera una password con parole BIP39, non una mnemonic wallet.** Per una mnemonic usare Seed BIP39.
 
-È disponibile anche la generazione opzionale di passphrase Diceware.
+## Iniziare
 
-## Verifiche
+Quando la release sarà completa:
 
-Le wordlist vengono verificate tramite SHA-256 e il programma esegue self-test prima della generazione.
+1. Scaricare immagine, `SHA256SUMS`, `SHA256SUMS.asc` e chiave pubblica dalla stessa release.
+2. [Verificare firma, fingerprint e checksum](docs/VERIFICA.md).
+3. Scrivere l’immagine su una microSD dedicata con Raspberry Pi Imager, senza personalizzazioni, e attendere la verifica.
+4. Inserire la SD nel Raspberry spento e collegare l’alimentazione alla porta **PWR IN**.
 
-La procedura richiede la verifica della trascrizione del segreto.
+La scrittura cancella il contenuto della SD scelta. Non serve installare Raspberry Pi OS prima.
 
-## Sicurezza
+## Sorgenti e test
 
-Per l'utilizzo con fondi reali lavorare offline, usare un ambiente affidabile e conservare i segreti esclusivamente su supporto fisico.
+Il frontend usato sul dispositivo è in [`raspberry/240x240/`](raspberry/240x240/). Il core originale congelato, i dizionari e le attribuzioni sono in `vendor/`. I file storici alla radice appartengono alla versione CLI/Linux originale: non installano l’immagine Raspberry.
 
-## Integrità release v1.0.2
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install -r requirements-dev.txt
+cd raspberry/240x240
+python3 -m unittest -v test_ui test_passwords test_navigation
+```
 
-Gli hash seguenti appartengono agli artefatti congelati della release v1.0.2.
+48 test host coprono il core, i formati, la navigazione e le traduzioni. Non sostituiscono le prove su Raspberry né un audit. [Dettagli](docs/TEST.md).
 
-SHA-256 sorgente della release:
-a347d11ec5d23dac0799c5d19ef5495d74b744e479eb67e706c0a7ad62c2564b
+## Limiti da conoscere
 
-SHA-256 binario Linux x86_64:
-9f90c5566eb21b0ef3e9766378ea33db406a85623d2855e8b4078e682519765f
+SEEDGEN non conserva fondi, non deriva indirizzi e non firma transazioni. L’entropia primaria proviene dai lanci inseriti: niente camera, RNG di sistema o BIP85 nel percorso di generazione.
 
-## Licenza
+Il frontend blocca generazione e verifica se rileva swap attiva o interfacce di rete non-loopback amministrativamente attive. È un controllo passivo, non una garanzia di isolamento del sistema operativo. CPython non garantisce la cancellazione sicura dei segreti dalla RAM.
 
-SeedGen è distribuito con licenza MIT. Vedere LICENSE.
+La forza nominale assume dadi equi e lanci indipendenti. Il filtro diagnostico sulla distribuzione dei lanci non misura né certifica l’entropia e condiziona l’insieme dei blocchi accettati. Nessun audit indipendente viene dichiarato. [Sicurezza e limiti](SECURITY.md).
+
+## Crediti e licenze
+
+- **SatoSats:** autore di SeedGen, core v1.0.2 e logica originale BIP39/Diceware; licenza MIT conservata.
+- **Andrea / @ilbitcoiner — Bitvero:** porting Raspberry, interfaccia, navigazione, lingue, branding, integrazione password e distribuzione di questo fork.
+- **SeedSigner:** sistema di build e driver della versione 0.8.7, con le rispettive licenze.
+- **EFF:** dizionari Diceware; **DejaVu:** font inclusi con licenza.
+
+[Crediti completi](CREDITS.md) · [Licenza originale](LICENSE) · [Licenza delle aggiunte](raspberry/LICENSE) · [Documentazione originale conservata](docs/upstream/README.md).
