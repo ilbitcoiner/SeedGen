@@ -10,7 +10,11 @@ Questo repository è un fork di [SatoSats/SeedGen](https://github.com/SatoSats/S
 
 La distribuzione di questo fork riguarda **esclusivamente lo schermo piccolo 240×240**. SeedSigner Plus / 320×240 non fa parte della release.
 
-**Stato della release:** i sorgenti sono disponibili. L’immagine compilata sul Mac del manutentore, i checksum e la sua firma devono ancora essere caricati. Finché non sono presenti gli asset nella pagina Releases, non esiste un download dell’immagine pronto all’uso.
+**Stato della release:** sorgenti, checksum, firma e chiave pubblica sono disponibili. L’immagine ricevuta dal manutentore è stata confrontata con i sorgenti del frontend e la firma è stata verificata. Il caricamento dell’immagine e degli asset nella pagina Releases resta da completare: finché non sono presenti lì, il download dell’immagine non è ancora pubblicato.
+
+[Checksum, firma e chiave pubblica](docs/releases/pi-v9/) · [Esito della verifica dell’immagine](docs/releases/pi-v9/IMAGE-VERIFICATION.md)
+
+Fingerprint della chiave di release: `04E489B5747151B692A54AD62A776C850F91B398`. Confrontarlo anche tramite un canale indipendente del manutentore.
 
 [Release e download](https://github.com/ilbitcoiner/SeedGen/releases) · [Installazione](docs/INSTALLAZIONE.md) · [Uso](docs/USO.md) · [Compilazione](BUILD.md) · [Verifica e firme](docs/VERIFICA.md)
 
