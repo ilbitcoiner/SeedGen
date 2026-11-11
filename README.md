@@ -6,26 +6,28 @@ Questo repository è un fork di [SatoSats/SeedGen](https://github.com/SatoSats/S
 
 ## Versioni
 
-**SEEDGEN Pi V9**, basata sul core SeedGen **v1.0.2**. V9 è la versione selezionata dopo le prove funzionali del manutentore; non indica un audit di sicurezza indipendente.
+**SEEDGEN Pi V9.1** è la versione corrente per Raspberry Pi Zero, basata sul core SeedGen **v1.0.2**.
 
 La distribuzione di questo fork riguarda **esclusivamente lo schermo piccolo 240×240**. SeedSigner Plus / 320×240 non fa parte della release.
 
-**Release binaria del 5 novembre 2026:** [SEEDGEN Pi V9 — 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9). I quattro asset pubblicati corrispondono, per dimensioni e SHA-256 riportati da GitHub, ai file verificati: immagine, manifest firmato, firma e chiave pubblica.
+**Release corrente** · [SEEDGEN Pi V9.1 — 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1)
 
-Il ramo principale include i [sorgenti dell’aggiornamento](raspberry/README.md) con verifica BIP39 finale, avvio diretto alla home, menu Power e logo nei menu. Lo stato della distribuzione binaria dell’aggiornamento è riportato nel [changelog](CHANGELOG.md).
+[Release precedente Pi V9](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9)
 
-### Download Pi V9
+Il ramo principale include i [sorgenti dell’aggiornamento](raspberry/README.md) con verifica BIP39 finale, avvio diretto alla home, menu Power e logo nei menu. Le modifiche sono riepilogate nel [changelog](CHANGELOG.md).
 
-- [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/seedgen_os.v1.0.2.pi0.v9.img)
-- [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/SHA256SUMS)
-- [Firma SHA256SUMS.asc](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/SHA256SUMS.asc)
-- [Chiave pubblica del manutentore](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/SEEDGEN-Pi-release-key.asc)
+### Download Pi V9.1
+
+- [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/seedgen_os.v1.0.2.pi0.v9.img)
+- [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/SHA256SUMS)
+- [Firma SHA256SUMS.asc](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/SHA256SUMS.asc)
+- [Chiave pubblica del manutentore](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/SEEDGEN-Pi-release-key.asc)
 
 Prima di scrivere la SD, [verificare fingerprint, firma e checksum](docs/VERIFICA.md).
 
-[Checksum, firma e chiave pubblica](docs/releases/pi-v9/) · [Esito della verifica dell’immagine](docs/releases/pi-v9/IMAGE-VERIFICATION.md)
+[Checksum, firma e chiave pubblica](docs/releases/pi-v9.1/) · [Note e verifica dell’immagine](docs/releases/pi-v9.1.md)
 
-Fingerprint della chiave di release: `04E489B5747151B692A54AD62A776C850F91B398`. Confrontarlo anche tramite un canale indipendente del manutentore.
+Fingerprint GPG di Pi V9.1 `667AAA68AD2D90BBFC682D7E3A5AAF7EB3389C20`. Confrontarlo anche tramite un canale indipendente del manutentore.
 
 [Release e download](https://github.com/ilbitcoiner/SeedGen/releases) · [Installazione](docs/INSTALLAZIONE.md) · [Uso](docs/USO.md) · [Compilazione](BUILD.md) · [Verifica e firme](docs/VERIFICA.md)
 
@@ -54,7 +56,7 @@ Non usare questa immagine come profilo per Pi Zero 2 W, Pi 4/5, Luckfox o SeedSi
 
 ## Iniziare
 
-La release [Pi V9](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9) è disponibile:
+Per installare [Pi V9.1](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1) seguire questi passaggi.
 
 1. Scaricare immagine, `SHA256SUMS`, `SHA256SUMS.asc` e chiave pubblica dalla stessa release.
 2. [Verificare firma, fingerprint e checksum](docs/VERIFICA.md).
