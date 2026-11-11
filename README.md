@@ -4,15 +4,17 @@ Generatore di seed BIP39 e password da **soli dadi fisici D6**, con interfaccia 
 
 Questo repository è un fork di [SatoSats/SeedGen](https://github.com/SatoSats/SeedGen). Il progetto originale e la sua cronologia sono conservati. Il porting Raspberry, l’interfaccia e le estensioni sono il contributo di **Andrea (@ilbitcoiner) / Bitvero**. Non è una release ufficiale di SeedSigner o del progetto originale.
 
-## Versione corrente
+## Versioni
 
 **SEEDGEN Pi V9**, basata sul core SeedGen **v1.0.2**. V9 è la versione selezionata dopo le prove funzionali del manutentore; non indica un audit di sicurezza indipendente.
 
 La distribuzione di questo fork riguarda **esclusivamente lo schermo piccolo 240×240**. SeedSigner Plus / 320×240 non fa parte della release.
 
-**Release pubblicata:** [SEEDGEN Pi V9 — 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9). I quattro asset pubblicati corrispondono, per dimensioni e SHA-256 riportati da GitHub, ai file verificati: immagine, manifest firmato, firma e chiave pubblica.
+**Release binaria del 5 novembre 2026:** [SEEDGEN Pi V9 — 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9). I quattro asset pubblicati corrispondono, per dimensioni e SHA-256 riportati da GitHub, ai file verificati: immagine, manifest firmato, firma e chiave pubblica.
 
-### Download
+Il ramo principale include i [sorgenti dell’aggiornamento](raspberry/README.md) con verifica BIP39 finale, avvio diretto alla home, menu Power e logo nei menu. Lo stato della distribuzione binaria dell’aggiornamento è riportato nel [changelog](CHANGELOG.md).
+
+### Download Pi V9
 
 - [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/seedgen_os.v1.0.2.pi0.v9.img)
 - [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9/SHA256SUMS)
@@ -41,11 +43,11 @@ Non usare questa immagine come profilo per Pi Zero 2 W, Pi 4/5, Luckfox o SeedSi
 ## Cosa offre
 
 - **Seed BIP39:** 12, 15, 18, 21 o 24 parole, con controllo checksum e verifica della trascrizione.
-- **Password:** soltanto Custom, Diceware classico (6–9 parole) e Diceware BIP39.
+- **Passphrase:** Custom, Diceware classico (6–9 parole) e Diceware BIP39.
 - **Verifica:** inserimento e controllo di una mnemonic BIP39.
 - **Strumenti:** integrità, Audit Mode, test pulsanti, lingua e spegnimento.
 - Interfaccia con caratteri grandi, riquadri blu, selezione arancione e avvio **SEEDGEN — by Bitvero**.
-- Freccia Indietro selezionabile con il joystick e Power in alto a destra, con conferma.
+- Freccia Indietro selezionabile con il joystick. Il menu Power offre Restart e Power off con conferma.
 - Italiano, inglese, francese e spagnolo per l’interfaccia. La lingua torna italiano al riavvio; le wordlist restano inglesi.
 
 **Diceware BIP39 genera una password con parole BIP39, non una mnemonic wallet.** Per una mnemonic usare Seed BIP39.
@@ -73,7 +75,7 @@ cd raspberry/240x240
 python3 -m unittest -v test_ui test_passwords test_navigation
 ```
 
-48 test host coprono il core, i formati, la navigazione e le traduzioni. Non sostituiscono le prove su Raspberry né un audit. [Dettagli](docs/TEST.md).
+56 test host coprono il core, i formati, la navigazione e le traduzioni. Non sostituiscono le prove su Raspberry né un audit. [Dettagli](docs/TEST.md).
 
 ## Limiti da conoscere
 

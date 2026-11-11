@@ -1,6 +1,6 @@
 """Navigation and language regression tests, using public strings only."""
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import main as app
 import i18n
 from test_ui import FakeUI
@@ -42,16 +42,32 @@ class NavTests(unittest.TestCase):
  def test_home_power_is_reachable_without_k3(self):
   a=self.app(['UP','OK','DOWN','OK']);focus=[]
   a.ui.home=lambda index:focus.append(index)
-  called=[];a.shutdown=lambda:called.append(True)
+  called=[];a.power_menu=lambda:called.append(True)
   self.assertEqual(a.home(),0)
   self.assertEqual(focus,[0,4,4,0]);self.assertEqual(called,[True])
  def test_power_requires_explicit_confirmation(self):
   a=self.app();a.menu=lambda *args:0
+  a.ui.shutdown_logo=lambda:None
   with patch.object(app.subprocess,'run') as power:a.shutdown();power.assert_not_called()
   a.menu=lambda *args:1
   with patch.object(app.subprocess,'run',side_effect=RuntimeError('power intercepted')) as power:
    with self.assertRaises(RuntimeError):a.shutdown()
    power.assert_called_once_with(['/sbin/poweroff'],check=True)
+ def test_restart_tile_requires_confirmation(self):
+  for confirmation in (0,1):
+   a=self.app(['OK']);a.ui.power_menu=lambda index:None
+   a.menu=lambda *args:confirmation
+   with patch.object(app.subprocess,'run',side_effect=RuntimeError('reboot intercepted')) as reboot:
+    if confirmation:
+     with self.assertRaises(RuntimeError):a.power_menu()
+     reboot.assert_called_once_with(['/sbin/reboot'],check=True)
+    else:
+     a.power_menu();reboot.assert_not_called()
+ def test_power_menu_selects_shutdown_and_can_go_back(self):
+  for keys,expected in ((['RIGHT','OK'],[True]),(['UP','OK'],[])):
+   a=self.app(keys);a.ui.power_menu=lambda index:None
+   called=[];a.shutdown=lambda:called.append(True)
+   a.power_menu();self.assertEqual(called,expected)
  def test_password_settings_return_to_previous_step(self):
   a=self.app();a.wl=['public'];calls=[];actions=iter([0,app.Cancel(),1,2,0])
   def menu(title,options):
@@ -94,13 +110,14 @@ class NavTests(unittest.TestCase):
    a=self.app(['OK']);a.display_words(['Verifica','Space'],'Words')
    self.assertEqual(a.ui.frames[0][1],['01  Verifica','02  Space'])
    a=self.app(['OK']);self.assertEqual(a.choose_word(['Verifica','Space'],1),'Verifica')
- def test_startup_back_opens_home_without_locking(self):
+ def test_startup_opens_home_without_confirmation(self):
   a=self.app();a.ui.splash=lambda:None
-  a.note=lambda *args:(_ for _ in ()).throw(app.Cancel())
+  a.note=Mock()
   a.home=lambda:(_ for _ in ()).throw(KeyboardInterrupt())
   with patch.object(app,'check_core',return_value=([],[],[('public','PASS')])):
    with self.assertRaises(KeyboardInterrupt):a.run()
   self.assertTrue(a.ready)
+  a.note.assert_not_called()
  def test_language_validation(self):
   with self.assertRaises(ValueError):i18n.set_language('xx')
   self.assertEqual(i18n.language(),'it')

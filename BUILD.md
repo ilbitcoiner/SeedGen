@@ -11,6 +11,7 @@ Git, Docker con Compose e `shasum`. Su Mac: Docker Desktop avviato, Terminale e 
 ```bash
 git clone https://github.com/ilbitcoiner/SeedGen.git
 cd SeedGen/raspberry/240x240
+shasum -a 256 -c SOURCE-SHA256SUMS
 caffeinate -i bash build-v9.sh
 ```
 

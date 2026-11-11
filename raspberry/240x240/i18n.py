@@ -16,16 +16,18 @@ Al riavvio torna italiano.|Italian after restart.|Italien au redémarrage.|Itali
 Test integrita|Integrity test|Test d'intégrité|Test de integridad
 Test pulsanti|Button test|Test des boutons|Prueba de botones
 Spegni Raspberry|Power off|Éteindre|Apagar
+Riavvio|Restart|Redémarrage|Reinicio
+Riavvia ora|Restart now|Redémarrer maintenant|Reiniciar ahora
 Spegni ora|Power off now|Éteindre maintenant|Apagar ahora
 Spegnimento|Power off|Extinction|Apagado
 Spegnimento...|Powering off...|Extinction...|Apagando...
 Annulla|Cancel|Annuler|Cancelar
-Tipo password|Password type|Mot de passe|Tipo de contraseña
+Tipo passphrase|Passphrase type|Type de phrase secrète|Tipo de frase de paso
 Diceware classico|Classic Diceware|Diceware classique|Diceware clásico
 Numero parole|Word count|Nombre de mots|Número de palabras
 Nuova seed BIP39|New BIP39 seed|Nouvelle seed BIP39|Nueva seed BIP39
 Verifica BIP39|Verify BIP39|Vérifier BIP39|Verificar BIP39
-Verifica BIP39 - TEST|Verify BIP39 - TEST|Vérifier BIP39 - TEST|Verificar BIP39 - TEST
+Verifica BIP39|Verify BIP39|Vérifier BIP39|Verificar BIP39
 Caratteri Custom|Custom characters|Caractères Custom|Caracteres Custom
 Minuscole|Lowercase|Minuscules|Minúsculas
 Maiuscole|Uppercase|Majuscules|Mayúsculas
@@ -131,6 +133,7 @@ Controlla parole e checksum.|Check words and checksum.|Vérifiez mots et checksu
 Non prova che una seed sia|This does not prove a seed is|Cela ne prouve pas qu'une seed est|Esto no demuestra que una seed sea
 casuale o sicura.|random or secure.|aléatoire ou sûre.|aleatoria o segura.
 Mnemonic non valida|Invalid mnemonic|Mnémonique invalide|Mnemónica no válida
+Copia non verificata|Copy not verified|Copie non vérifiée|Copia sin verificar
 Checksum BIP39 errato.|Invalid BIP39 checksum.|Checksum BIP39 incorrect.|Checksum BIP39 incorrecto.
 Ricontrolla il foglio.|Check your paper copy.|Revérifiez votre feuille.|Revisa la copia en papel.
 Checksum BIP39 valido|Valid BIP39 checksum|Checksum BIP39 valide|Checksum BIP39 válido
@@ -173,6 +176,7 @@ Sin/des: pagina K2: avanti / K3: esci|Left/right: page Up: Back / Centre: next|G
 Sin/des: pagina Centro: avanti / K3: esci|Left/right: page Up: Back / Centre: next|Gauche/droite : page Haut : Retour|Izq./der.: página Arriba: Atrás
 *=spazio / Centro: avanti K3: esci|*=space / Centre: next Up: Back|*=espace / Centre : suite Haut : Retour|*=espacio / Centro: seguir Arriba: Atrás
 Frecce: scegli / Centro: salva K1: cancella / K3: esci|Arrows: choose / Centre: OK K1: undo / Up: Back|Flèches: choix / Centre: OK K1: effacer / Haut: retour|Flechas: elegir / Centro: OK K1: borrar / Arriba: atrás
+Frecce: scegli / Centro: apri Su: freccia|Arrows: choose / Centre: open Up: back|Flèches : choix / Centre : ouvrir Haut : retour|Flechas: elegir / Centro: abrir Arriba: volver
 Frecce: scegli / Centro: apri Su: Power|Arrows: choose / Centre: open Up: Power|Flèches : choix / Centre : ouvrir Haut : Power|Flechas: elegir / Centro: abrir Arriba: Power
 Freccia: Centro per uscire|Back arrow: press Centre|Retour : appuyez au centre|Atrás: pulsa el centro
 Su: indietro / Centro: apri|Up: Back / Centre: open|Haut : Retour / Centre : ouvrir|Arriba: Atrás / Centro: abrir

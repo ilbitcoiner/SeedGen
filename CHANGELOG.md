@@ -1,5 +1,13 @@
 # Changelog del fork Raspberry
 
+## Pi V9.1 — sorgenti aggiornati, immagine firmata in preparazione
+
+- La verifica della copia convalida il checksum BIP39 delle parole reinserite.
+- Dopo il logo di avvio e i controlli, si apre la home.
+- Il riquadro Passphrase apre Tipo passphrase. Power offre Restart e Power off con conferma.
+- Logo Bitvero in basso nelle schermate con spazio dedicato.
+- [56 test host e risultati delle prove fisiche](raspberry/240x240/REPORT_TEST.txt).
+
 ## Pi V9 — pubblicata il 5 novembre 2026, solo 240×240
 
 - Porting su Raspberry Pi Zero originale v1.3 con Waveshare ST7789 240×240.

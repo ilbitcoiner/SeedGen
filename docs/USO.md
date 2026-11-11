@@ -5,7 +5,7 @@
 | Schermata | Comando |
 |---|---|
 | Home | Frecce per scegliere un riquadro, centro/KEY2 per aprire |
-| Power | Su da uno dei riquadri superiori, poi centro; confermare Spegni ora |
+| Power | Su da un riquadro superiore e centro per aprire. Scegliere Restart o Power off e confermare |
 | Menu | Su/Giù per la voce, centro/KEY2 per confermare |
 | Indietro nei menu | Su dalla prima voce oppure Sinistra, poi centro sulla freccia |
 | Informazioni/parole/password | Su per selezionare Indietro; centro per uscire; Giù per tornare al contenuto |
@@ -26,11 +26,11 @@ La griglia **non lancia dadi virtuali**: registra il valore del dado fisico. Tor
 | 21 | 224 | 87 |
 | 24 | 256 | 100 |
 
-La logica originale può rifiutare un blocco: in tal caso rifare tutti i lanci richiesti. Trascrivere le parole nell’ordine e completare la verifica. I controlli richiedono dadi equi e lanci indipendenti; non certificano la qualità fisica dell’entropia.
+La logica originale può rifiutare un blocco: in tal caso rifare tutti i lanci richiesti. Trascrivere le parole nell’ordine e reinserirle dal foglio. “Copia verificata” richiede corrispondenza delle parole e checksum BIP39 valido. I controlli richiedono dadi equi e lanci indipendenti; non certificano la qualità fisica dell’entropia.
 
-## Password
+## Passphrase
 
-Sono disponibili **soltanto**:
+Aprire il riquadro Passphrase per accedere a Tipo passphrase. Il menu offre:
 
 - **Custom:** unione dei gruppi di caratteri selezionati, forza nominale 64/128/256 bit. Non è garantito che ogni gruppo compaia almeno una volta.
 - **Diceware classico:** percorso originale, da 6 a 9 parole del dizionario Diceware lungo.
