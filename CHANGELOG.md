@@ -1,6 +1,8 @@
 # Changelog del fork Raspberry
 
-## Pi V9.1 — sorgenti aggiornati, immagine firmata in preparazione
+## Pi V9.1 — release firmata per 240×240
+
+[Download e allegati di verifica](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1) · [Note della release](docs/releases/pi-v9.1.md)
 
 - La verifica della copia convalida il checksum BIP39 delle parole reinserite.
 - Dopo il logo di avvio e i controlli, si apre la home.
