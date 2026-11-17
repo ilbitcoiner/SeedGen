@@ -6,30 +6,21 @@ Questo repository è un fork di [SatoSats/SeedGen](https://github.com/SatoSats/S
 
 ## Versioni
 
-**SEEDGEN Pi V9.1** è la versione corrente per Raspberry Pi Zero, basata sul core SeedGen **v1.0.2**.
+**SEEDGEN Pi V9.2** è la release corrente per Raspberry Pi Zero con display 240×240, basata sul core SeedGen **v1.0.2**.
 
-La distribuzione di questo fork riguarda **esclusivamente lo schermo piccolo 240×240**. SeedSigner Plus / 320×240 non fa parte della release.
+- [Release Pi V9.2 — Schermo pieno](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.2)
+- [Sorgenti e istruzioni di compilazione](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.2/raspberry/README.md) · [Rapporto dei test](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.2/raspberry/240x240/REPORT_TEST.txt) · [PR #1](https://github.com/SatoSats/SeedGen/pull/1)
+- [Release precedente Pi V9.1](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1) · [Release Pi V9](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9)
 
-**Release corrente** · [SEEDGEN Pi V9.1 — 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1)
+### Download Pi V9.2
 
-[Release precedente Pi V9](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9)
+- [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/seedgen_os.v1.0.2.pi0.v9.img)
+- [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/SHA256SUMS)
+- [Firma SHA256SUMS.asc](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/SHA256SUMS.asc)
+- [Chiave pubblica del manutentore](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/SEEDGEN-Pi-release-key.asc)
 
-I [sorgenti della Pi V9.1](raspberry/README.md) e il [changelog](CHANGELOG.md) documentano la release firmata.\n\nLa [PR #1](https://github.com/SatoSats/SeedGen/pull/1) contiene la revisione successiva con layout a schermo pieno, flusso BIP39 ripreso dalla versione Linux, Diceware diretto e tastiera a schermo. Consulta i [sorgenti e le istruzioni di compilazione](https://github.com/ilbitcoiner/SeedGen/blob/2df89dec29c2286bc6114fb1fc5d514f0b917981/raspberry/README.md) e il [rapporto dei test](https://github.com/ilbitcoiner/SeedGen/blob/2df89dec29c2286bc6114fb1fc5d514f0b917981/raspberry/240x240/REPORT_TEST.txt). La verifica della nuova immagine firmata è in attesa degli artefatti di build.
+Fingerprint GPG di Pi V9.2 `3F4E3C778F5D63EC1B0985F85823FC25A5186930`. Prima di scrivere la SD, [verificare fingerprint, firma e checksum](docs/VERIFICA.md).
 
-### Download Pi V9.1
-
-- [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/seedgen_os.v1.0.2.pi0.v9.img)
-- [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/SHA256SUMS)
-- [Firma SHA256SUMS.asc](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/SHA256SUMS.asc)
-- [Chiave pubblica del manutentore](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.1/SEEDGEN-Pi-release-key.asc)
-
-Prima di scrivere la SD, [verificare fingerprint, firma e checksum](docs/VERIFICA.md).
-
-[Checksum, firma e chiave pubblica](docs/releases/pi-v9.1/) · [Note e verifica dell’immagine](docs/releases/pi-v9.1.md)
-
-Fingerprint GPG di Pi V9.1 `667AAA68AD2D90BBFC682D7E3A5AAF7EB3389C20`. Confrontarlo anche tramite un canale indipendente del manutentore.
-
-[Release e download](https://github.com/ilbitcoiner/SeedGen/releases) · [Installazione](docs/INSTALLAZIONE.md) · [Uso](docs/USO.md) · [Compilazione](BUILD.md) · [Verifica e firme](docs/VERIFICA.md)
 
 ## Hardware
 
@@ -45,18 +36,16 @@ Non usare questa immagine come profilo per Pi Zero 2 W, Pi 4/5, Luckfox o SeedSi
 ## Cosa offre
 
 - **Seed BIP39:** 12, 15, 18, 21 o 24 parole, con controllo checksum e verifica della trascrizione.
-- **Passphrase:** Custom, Diceware classico (6–9 parole) e Diceware BIP39.
+- **Passphrase:** accesso diretto a Diceware classico da 6 a 9 parole, con tastiera a schermo per l’inserimento.
 - **Verifica:** inserimento e controllo di una mnemonic BIP39.
 - **Strumenti:** integrità, Audit Mode, test pulsanti, lingua e spegnimento.
 - Interfaccia con caratteri grandi, riquadri blu, selezione arancione e avvio **SEEDGEN — by Bitvero**.
 - Freccia Indietro selezionabile con il joystick. Il menu Power offre Restart e Power off con conferma.
 - Italiano, inglese, francese e spagnolo per l’interfaccia. La lingua torna italiano al riavvio; le wordlist restano inglesi.
 
-**Diceware BIP39 genera una password con parole BIP39, non una mnemonic wallet.** Per una mnemonic usare Seed BIP39.
-
 ## Iniziare
 
-Per installare [Pi V9.1](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1) seguire questi passaggi.
+Per installare [Pi V9.2](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.2) seguire questi passaggi.
 
 1. Scaricare immagine, `SHA256SUMS`, `SHA256SUMS.asc` e chiave pubblica dalla stessa release.
 2. [Verificare firma, fingerprint e checksum](docs/VERIFICA.md).
@@ -67,7 +56,7 @@ La scrittura cancella il contenuto della SD scelta. Non serve installare Raspber
 
 ## Sorgenti e test
 
-Il frontend usato sul dispositivo è in [`raspberry/240x240/`](raspberry/240x240/). Il core originale congelato, i dizionari e le attribuzioni sono in `vendor/`. I file storici alla radice appartengono alla versione CLI/Linux originale: non installano l’immagine Raspberry.
+Il frontend usato sul dispositivo è in [`raspberry/240x240/`](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.2/raspberry/240x240/). Il core originale congelato, i dizionari e le attribuzioni sono in `vendor/`. I file storici alla radice appartengono alla versione CLI/Linux originale: non installano l’immagine Raspberry.
 
 ```bash
 python3 -m venv .venv
