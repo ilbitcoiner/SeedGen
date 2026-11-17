@@ -14,7 +14,7 @@ La distribuzione di questo fork riguarda **esclusivamente lo schermo piccolo 240
 
 [Release precedente Pi V9](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9)
 
-Il ramo principale include i [sorgenti dell’aggiornamento](raspberry/README.md) con verifica BIP39 finale, avvio diretto alla home, menu Power e logo nei menu. Le modifiche sono riepilogate nel [changelog](CHANGELOG.md).
+I [sorgenti della Pi V9.1](raspberry/README.md) e il [changelog](CHANGELOG.md) documentano la release firmata.\n\nLa [PR #1](https://github.com/SatoSats/SeedGen/pull/1) contiene la revisione successiva con layout a schermo pieno, flusso BIP39 ripreso dalla versione Linux, Diceware diretto e tastiera a schermo. Consulta i [sorgenti e le istruzioni di compilazione](https://github.com/ilbitcoiner/SeedGen/blob/2df89dec29c2286bc6114fb1fc5d514f0b917981/raspberry/README.md) e il [rapporto dei test](https://github.com/ilbitcoiner/SeedGen/blob/2df89dec29c2286bc6114fb1fc5d514f0b917981/raspberry/240x240/REPORT_TEST.txt). La verifica della nuova immagine firmata è in attesa degli artefatti di build.
 
 ### Download Pi V9.1
 
