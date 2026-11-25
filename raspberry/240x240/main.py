@@ -6,9 +6,11 @@ Secrets are not intentionally saved or printed. Python cannot securely erase RAM
 import gc
 import hashlib
 import hmac
+import math
 import os
 from pathlib import Path
 import subprocess
+from string import ascii_lowercase
 import sys
 import time
 import password_tools as passwords
@@ -27,7 +29,7 @@ CORE_SHA256='a347d11ec5d23dac0799c5d19ef5495d74b744e479eb67e706c0a7ad62c2564b'
 LENGTHS=(12,15,18,21,24)
 MAIN_MENU=tuple('BIP39: %d parole' % n for n in LENGTHS)+(
     'Diceware', 'Verifica BIP39', 'Test integrita',
-    'Audit Mode', 'Test pulsanti', 'Spegni Raspberry')
+    'Audit Mode', 'Spegni Raspberry')
 
 
 def diceware_words(rolls, dictionary):
@@ -145,8 +147,11 @@ class UI:
     def render(self,title,lines=(),footer=""):
         views.render(self,CANVAS_WIDTH,title,list(lines),footer)
 
-    def dice(self,value,done,total,rolls):
-        views.dice(self,CANVAS_WIDTH,value,done,total,rolls)
+    def dice(self,value,done,total,rolls,diceware=False):
+        views.dice(self,CANVAS_WIDTH,value,done,total,rolls,diceware)
+
+    def keyboard(self, number, prefix, keys, focus, invalid, suggestions):
+        views.keyboard(self, CANVAS_WIDTH, number, prefix, keys, focus, invalid, suggestions)
 
     def home(self,index):
         views.home(self,CANVAS_WIDTH,index)
@@ -259,14 +264,14 @@ class App:
                 elif key=='BACK':raise Cancel()
         finally:self.ui.back_focused=False
 
-    def collect(self, n):
+    def collect(self, n, *, diceware=False):
         rolls = []
         value = 1
         back=False
         while True:
             self.ui.back_focused=back
             if hasattr(self.ui,'dice'):
-                self.ui.dice(value,len(rolls),n,rolls)
+                self.ui.dice(value,len(rolls),n,rolls,diceware)
             else:
                 self.screen('Lancio %d/%d' % (len(rolls)+1,n),['Risultato: %d'%value])
             key = self.ui.key()
@@ -287,26 +292,56 @@ class App:
             elif key in ('OK', 'K2'):
                 rolls.append(value)
                 if len(rolls) == n:
-                    if self.menu('Conferma blocco', ['Usa questi %d lanci' % n, 'Correggi ultimo lancio']) == 0:
-                        return rolls
-                    rolls.pop()
-                value = 1
+                    self.menu('Conferma blocco', ['Usa questi %d lanci' % n])
+                    return rolls
 
     def choose_word(self, words, number):
-        # Prefix selection without ever displaying the expected word.
+        dictionary = set(words)
+        keys = (*ascii_lowercase, '-', 'DEL', 'OK')
+        columns = views.KEYBOARD_COLUMNS
         prefix = ''
+        focus = 0
+        invalid = False
+        previous_prefix = None
+        suggestions = []
         while True:
-            matches = [w for w in words if w.startswith(prefix)]
-            if len(matches) <= 7:
-                return matches[self.menu('Parola %d' % number,matches,translate_options=False)]
-            letters = sorted(set(w[len(prefix):len(prefix)+1] for w in matches))
-            labels = [('Fine parola' if not c else prefix+c+'...') for c in letters]
-            if prefix:
-                labels.append('Cancella lettera')
-            choice = self.menu('Parola %d: %s' % (number, prefix), labels)
-            if choice == len(letters): prefix = prefix[:-1]
-            elif not letters[choice]: return prefix
-            else: prefix += letters[choice]
+            if prefix != previous_prefix:
+                suggestions = sorted(word for word in dictionary if word.startswith(prefix)) if prefix else []
+                previous_prefix = prefix
+            self.ui.keyboard(number, prefix, keys, focus, invalid, suggestions)
+            key = self.ui.key()
+            if key == 'BACK':
+                raise Cancel()
+            if key == 'K2' and focus >= 0 and suggestions:
+                if len(suggestions) == 1:
+                    return suggestions[0]
+                try:
+                    selection = self.menu('Parole suggerite', suggestions, translate_options=False)
+                except Cancel:
+                    continue
+                return suggestions[selection]
+            if key == 'K1' or (key in ('OK', 'K2') and focus >= 0 and keys[focus] == 'DEL'):
+                prefix = prefix[:-1]
+                invalid = False
+            elif key in ('OK', 'K2'):
+                if focus == -1:
+                    raise Cancel()
+                if keys[focus] == 'OK':
+                    if prefix in dictionary:
+                        return prefix
+                    invalid = True
+                elif not prefix or any(word.startswith(prefix + keys[focus]) for word in suggestions):
+                    prefix += keys[focus]
+                    invalid = False
+            elif key == 'UP':
+                focus = focus - columns if focus >= columns else -1
+            elif key == 'DOWN':
+                focus = 0 if focus == -1 else min(focus + columns, len(keys) - 1)
+            elif focus >= 0 and key in ('LEFT', 'RIGHT'):
+                row = focus // columns * columns
+                length = min(columns, len(keys) - row)
+                step = 1 if key == 'RIGHT' else -1
+                focus = row + (focus - row + step) % length
 
     def display_words(self,words,title):
         page=0;pages=(len(words)+4)//5;back=False
@@ -334,7 +369,7 @@ class App:
 
     def verify_copy(self, words, dictionary, *, bip39=False):
         while True:
-            self.note('Verifica copia', ['Usa solo il foglio.', 'Inserisci TUTTE le parole', 'nello stesso ordine.', 'K3 annulla: non verificata.'])
+            self.note('Verifica copia', ['Inserisci TUTTE le parole', 'nello stesso ordine.'])
             entered = [self.choose_word(dictionary, i+1) for i in range(len(words))]
             good = hmac.compare_digest(' '.join(entered).encode('utf-8'), ' '.join(words).encode('utf-8'))
             if good and bip39:
@@ -356,17 +391,38 @@ class App:
 
     def generate(self, count, diceware=False):
         require_offline()
-        self.note('Prima di iniziare', ['VERSIONE SPERIMENTALE', 'Solo prove, niente fondi.', 'Usa dadi fisici affidabili.', 'Niente foto o telecamere.', 'Prepara carta e penna.', 'K3: annulla senza salvare.'])
+        self.note('Avviso sui dadi fisici', [
+            'Il rejection sampling elimina solo il bias della conversione base 6 → bit.',
+            'Il bias fisico dei dadi resta.',
+            'Usa dadi non magnetici e non truccati.',
+            'Lancia su una superficie uniforme con tecnica costante.',
+        ])
+        if diceware:
+            n = count * 5
+            bits = round(count * math.log2(7776))
+            self.note('Diceware: %d parole' % count, [
+                '%d bit di entropia.' % bits,
+                '%d lanci per blocco.' % n,
+                '5 lanci per parola.',
+            ])
+        else:
+            bits = core.ENTROPY_BITS[count]
+            n = core.dice_rolls_needed(bits)
+            probability = round(core.acceptance_probability(bits) * 100)
+            self.note('BIP39: %d parole' % count, [
+                '%d bit di entropia.' % bits,
+                '%d lanci per blocco.' % n,
+                'Prob. accettazione: %d%%' % probability,
+            ])
         words = rolls = entropy = None
         try:
             while True:
-                n = count*5 if diceware else core.dice_rolls_needed(core.ENTROPY_BITS[count])
-                rolls = self.collect(n)
+                rolls = self.collect(n, diceware=diceware)
                 require_offline()
-                valid, _ = core.analizza_distribuzione_lanci(rolls)
+                valid, most_frequent = core.analizza_distribuzione_lanci(rolls)
                 if not valid:
                     rolls = None
-                    self.note('Distribuzione anomala', ['Tutto il blocco scartato.', 'Rifai TUTTI i lanci.', 'Questo test non garantisce', "la casualita dei dadi."])
+                    self.note('Distribuzione anomala', ['Faccia più frequente: %d%%' % most_frequent, 'Tutto il blocco scartato.', 'Rifai TUTTI i lanci.'])
                     continue
                 if diceware:
                     words = diceware_words(rolls, self.dw)
@@ -380,34 +436,23 @@ class App:
                     if core.mnemonic_to_entropy(words, self.wl) != entropy:
                         raise RuntimeError('Verifica BIP39 fallita')
                 break
+            self.note('Blocco accettato', ['Distribuzione accettata.', '%d bit di entropia.' % bits])
             if diceware:
-                self.note('Passphrase Diceware', ['Trascrivi in minuscolo.', 'Un solo spazio tra parole.', 'Numeri esclusi.', 'Conserva separata', 'dalla seed BIP39.'])
+                self.note('Passphrase pronta', ['Prepara carta e penna.', 'Ambiente sicuro e privato.', 'Niente foto o telecamere.', 'Conserva la passphrase separata dalla seed.'])
+            else:
+                self.note('Seed BIP39 pronta', ['Prepara carta e penna.', 'Ambiente sicuro e privato.', 'Niente foto o telecamere.'])
             self.display_words(words, 'Diceware' if diceware else 'Seed BIP39')
             self.verify_copy(words, self.dw if diceware else self.wl, bip39=not diceware)
         finally:
-            self.screen('Sessione chiusa', ['Nessun segreto salvato.', 'RAM Python non azzerabile.', 'Spegni dopo la prova.'])
+            self.screen('Sessione chiusa', ['Nessun segreto salvato.', 'RAM Python non azzerabile.', 'Spegni il dispositivo.'])
             words = rolls = entropy = None
             gc.collect()
-
-    def diagnostics(self):
-        last='Nessuno';back=False
-        try:
-            while True:
-                self.ui.back_focused=back
-                self.screen('Test pulsanti',['Prova joystick','e tutti i pulsanti.','Ultimo: '+tr(last)],
-                            'Freccia: Centro per uscire' if back else 'Su: indietro / Centro: apri')
-                key=self.ui.key()
-                if key=='BACK' or back and key in ('OK','K2'):return
-                last=key
-                if key=='UP':back=True
-                elif key=='DOWN':back=False
-        finally:self.ui.back_focused=False
 
     def verify_mnemonic(self):
         require_offline()
         words=entropy=None
         try:
-            self.note('Verifica BIP39', ['Usa solo seed di prova.', 'Controlla parole e checksum.', 'Non prova che una seed sia', 'casuale o sicura.'])
+            self.note('Verifica BIP39', ['Controlla parole e checksum.', 'Non prova che una seed sia', 'casuale o sicura.'])
             count=LENGTHS[self.menu('Numero parole', [str(n)+' parole' for n in LENGTHS])]
             words=[self.choose_word(self.wl,i+1) for i in range(count)]
             require_offline()
@@ -523,7 +568,7 @@ class App:
     def confirm_string(self,text,alphabet):
         while True:
             self.note('Verifica copia',['Riscrivi dal foglio.', 'Maiuscole e simboli contano.'])
-            entered=''.join(self.choose_word(list(alphabet),i+1) for i in range(len(text)))
+            entered = ''.join(alphabet[self.menu('Carattere %d' % (i + 1), list(alphabet), translate_options=False)] for i in range(len(text)))
             good=hmac.compare_digest(entered.encode('ascii'),text.encode('ascii'))
             entered=None
             if good:
@@ -533,12 +578,7 @@ class App:
             elif choice==2:raise Cancel()
 
     def password_menu(self):
-        while True:
-            kind=self.menu('Tipo passphrase',passwords.FORMATS)
-            try:return self.password_flow(kind)
-            except Cancel:
-                self.ui.back_focused=False
-                continue
+        return self.password_flow(1)
 
     def password_settings(self,kind):
         enabled=[True,True,True,False]
@@ -569,10 +609,9 @@ class App:
         return alphabet,self.wl if kind==2 else None,bits,separator
 
     def password_flow(self,kind):
-        # The parent menu catches cancellation and allows a fresh choice.
         if kind not in (0,1,2):raise ValueError('Invalid password type')
         if kind==1:
-            count=(6,7,8,9)[self.menu('Diceware classico',[str(n)+' parole' for n in (6,7,8,9)])]
+            count=(6,7,8,9)[self.menu('Passphrase',[str(n)+' parole' for n in (6,7,8,9)])]
             return self.generate(count,True)
         alphabet=None;dictionary=None;separator=None;words=None;text=None;rolls=None;indices=None
         try:
@@ -580,7 +619,7 @@ class App:
             symbols=dictionary or alphabet
             count=passwords.choice_count(len(symbols),bits)
             n,_,_=passwords.roll_plan(len(symbols),count)
-            self.note('Prima di iniziare',['Solo dati di prova.', str(bits)+' bit nominali con dadi equi e indipendenti.',
+            self.note('Prima di iniziare',[str(bits)+' bit nominali con dadi equi e indipendenti.',
                       str(count)+(' parole' if dictionary else ' caratteri'),str(n)+' lanci per blocco.',
                       'I blocchi fuori intervallo vanno rifatti.'])
             require_offline()
@@ -613,7 +652,7 @@ class App:
                 self.confirm_string(text,alphabet)
         finally:
             words=text=rolls=indices=alphabet=dictionary=None
-            self.screen('Sessione chiusa',['Nessun salvataggio.', 'Spegni dopo la prova.']);gc.collect()
+            self.screen('Sessione chiusa',['Nessun salvataggio.', 'Spegni il dispositivo.']);gc.collect()
 
     def language_menu(self):
         while True:
@@ -625,13 +664,12 @@ class App:
 
     def tools_menu(self):
         while True:
-            choice=self.menu('Strumenti',['Test integrita','Audit Mode','Test pulsanti','Lingua','Spegni Raspberry'])
+            choice=self.menu('Strumenti',['Test integrita','Audit Mode','Lingua','Spegni Raspberry'])
             try:
                 if choice==0:self.integrity()
                 elif choice==1:self.audit()
-                elif choice==2:self.diagnostics()
-                elif choice==3:self.language_menu()
-                elif choice==4:self.shutdown()
+                elif choice==2:self.language_menu()
+                elif choice==3:self.shutdown()
             except Cancel:self.ui.back_focused=False
 
     def run(self):
@@ -665,7 +703,7 @@ def main():
     try:
         App(ui).run()
     except Exception:
-        ui.render('ERRORE - BLOCCATO', ['Avvio o self-test falliti.', 'Non usare seed reali.'])
+        ui.render('ERRORE - BLOCCATO', ['Avvio o self-test falliti.', 'Generazione disabilitata.'])
         while True: time.sleep(60)
     finally:
         ui.GPIO.cleanup()

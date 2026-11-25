@@ -7,8 +7,9 @@ spec=importlib.util.spec_from_file_location('v5',Path(__file__).with_name('main.
 v5=importlib.util.module_from_spec(spec); spec.loader.exec_module(v5)
 
 class FakeUI:
-    def __init__(self,keys=()): self.keys=iter(keys); self.frames=[]
+    def __init__(self,keys=()): self.keys=iter(keys); self.frames=[]; self.keyboard_frames=[]
     def key(self): return next(self.keys)
+    def keyboard(self, *state): self.keyboard_frames.append(state)
     def render(self,title,lines=(),footer=''): self.frames.append((title,list(lines),footer))
 
 class Tests(unittest.TestCase):
@@ -39,8 +40,9 @@ class Tests(unittest.TestCase):
             self.assertEqual(N,expected); self.assertGreaterEqual(k,bits)
             self.assertEqual(p,v5.core.acceptance_probability(bits))
     def test_menu_scroll_and_wrap(self):
-        a=self.app(['DOWN']*10+['OK'])
-        self.assertEqual(a.menu('Menu',v5.MAIN_MENU),10)
+        last=len(v5.MAIN_MENU)-1
+        a=self.app(['DOWN']*last+['OK'])
+        self.assertEqual(a.menu('Menu',v5.MAIN_MENU),last)
         self.assertIn('> Spegni Raspberry',a.ui.frames[-1][1])
         a=self.app(['UP','DOWN','OK']); self.assertEqual(a.menu('Menu',v5.MAIN_MENU),0)
     def test_large_font_word_pages(self):
@@ -65,13 +67,33 @@ class Tests(unittest.TestCase):
 
     def test_menu_cancel(self):
         with self.assertRaises(v5.Cancel): self.app(['BACK']).menu('Menu',v5.MAIN_MENU)
-    def test_correct_final_roll(self):
-        a=self.app(['OK','OK','DOWN','OK','RIGHT','OK','OK'])
+    def test_confirm_rolls_has_one_option(self):
+        a=self.app(['OK','RIGHT','OK','OK'])
         self.assertEqual(a.collect(2),[1,2])
+        self.assertEqual(a.ui.frames[-1][:2], ('Conferma blocco', ['> Usa questi 2 lanci']))
+    def test_dice_cursor_retains_last_face(self):
+        for diceware in (False, True):
+            a = self.app(['DOWN', 'RIGHT', 'OK', 'RIGHT', 'OK', 'OK'])
+            self.assertEqual(a.collect(2, diceware=diceware), [5, 6])
+
+    def test_keyboard_shows_live_matches_and_completes_unique_prefix(self):
+        a = self.app(['OK', 'OK', 'OK', 'K2'])
+        self.assertEqual(a.choose_word(['aardvark', 'aaabc'], 1), 'aaabc')
+        self.assertEqual([state[-1] for state in a.ui.keyboard_frames], [[], ['aaabc', 'aardvark'], ['aaabc', 'aardvark'], ['aaabc']])
+
+    def test_keyboard_suggestions_can_be_cancelled_and_selected(self):
+        a = self.app(['OK', 'OK', 'OK', 'K2', 'BACK', 'K2', 'DOWN', 'OK'])
+        self.assertEqual(a.choose_word(['aaaz', 'aaab', 'bbbb'], 1), 'aaaz')
+        self.assertEqual(a.ui.keyboard_frames[-1][1], 'aaa')
+
     def test_undo_and_cancel(self):
         with self.assertRaises(v5.Cancel): self.app(['OK','K1','BACK']).collect(2)
-    def test_choose_prefix(self):
-        a=self.app(['OK','OK','OK']); self.assertEqual(a.choose_word(['aa','ab','ac','ad','ae','af','ag','ah'],1),'aa')
+    def test_keyboard_corrects_letter_without_restarting_word(self):
+        a = self.app(['OK', 'RIGHT', 'OK', 'K1', 'LEFT', 'OK',
+                      'DOWN', 'DOWN', 'DOWN', 'DOWN', 'LEFT', 'OK'])
+        self.assertEqual(a.choose_word(['aa', 'ab'], 2), 'aa')
+        self.assertEqual([state[1] for state in a.ui.keyboard_frames][3:7],
+                         ['ab', 'a', 'a', 'aa'])
     def test_full_copy_and_mismatch(self):
         a=self.app(); a.note=lambda *args:None
         entered=iter(['ability','abandon'])
@@ -143,7 +165,7 @@ class Tests(unittest.TestCase):
             if not dw:
                 while not v5.core.extract_entropy_from_dice_block(rolls,v5.core.ENTROPY_BITS[count])[2]:
                     rolls=v5.core.encode_base6(0,N)  # fallback covered only as deterministic core fixture
-            a.collect=lambda n:list(rolls)
+            a.collect=lambda n, **kwargs:list(rolls)
             shown=[]; verified=[]
             a.display_words=lambda words,title:shown.extend(words)
             def verify(words, dictionary, *, bip39):
@@ -161,13 +183,14 @@ class Tests(unittest.TestCase):
         self.assertTrue(v5.core.analizza_distribuzione_lanci(rejected)[0])
         self.assertFalse(v5.core.extract_entropy_from_dice_block(rejected, 128)[2])
         blocks = iter([rejected, [1]*N, public])
-        a.collect = lambda n: next(blocks)
+        a.collect = lambda n, **kwargs: next(blocks)
         a.display_words = lambda *args: None
         a.verify_copy = lambda *args, **kwargs: None
         with patch.object(v5, 'require_offline'):
             a.generate(12)
         self.assertIn('Blocco rifiutato',notes)
         self.assertIn('Distribuzione anomala',notes)
+        self.assertLess(notes.index('Blocco accettato'), notes.index('Seed BIP39 pronta'))
 
     def test_guard_blocks_network_and_swap(self):
         a=self.app()

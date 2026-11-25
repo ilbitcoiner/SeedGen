@@ -10,13 +10,13 @@ cd raspberry/240x240
 python3 -m unittest -v test_ui test_passwords test_navigation
 ```
 
-La suite contiene **56 test host**. Copre tutte le lunghezze BIP39, la verifica finale della copia, i blocchi rifiutati, i formati passphrase, la navigazione, il menu Power e le traduzioni. La suite esegue anche i 14 self-test originali.
+La suite contiene **58 test host sul ramo di sviluppo**. Copre tutte le lunghezze BIP39, la verifica finale della copia, i blocchi rifiutati, i formati passphrase, la navigazione, il menu Power e le traduzioni. La suite esegue anche i 14 self-test originali.
 
 ## Integrità e sintassi
 
 ```bash
 cd raspberry/240x240/vendor
-shasum -a 256 -c SHA256SUMS
+shasum -a 256 -c SOURCE-SHA256SUMS
 ```
 
 Da `raspberry/240x240/`:

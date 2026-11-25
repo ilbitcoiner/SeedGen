@@ -2,13 +2,13 @@
 
 ## Download
 
-Aprire [SEEDGEN Pi V9.1 — Raspberry Pi Zero / 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1) e scaricare questi file.
+Aprire [SEEDGEN Pi V9.3 — Raspberry Pi Zero / 240×240](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.3) e scaricare questi file.
 
-- `seedgen_os.v1.0.2.pi0.v9.img`;
+- `seedgen-pi-v9.3.img`;
 - `SHA256SUMS` e `SHA256SUMS.asc`;
 - `SEEDGEN-Pi-release-key.asc`; il fingerprint completo è pubblicato nelle note della release e nel repository.
 
-La release Pi V9.1 è pubblicata con questi quattro file. Gli archivi automatici GitHub “Source code” contengono sorgenti, non la SD pronta. Non usare vecchi binari Linux x86_64 ereditati dall’upstream sul Raspberry.
+La release Pi V9.3 è pubblicata con questi quattro file. Gli archivi automatici GitHub “Source code” contengono sorgenti, non la SD pronta. Non usare vecchi binari Linux x86_64 ereditati dall’upstream sul Raspberry.
 
 ## Verifica e scrittura
 

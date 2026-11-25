@@ -10,13 +10,15 @@ Pin fisici BOARD: Su 31, Giù 35, Sinistra 29, Destra 37, Centro 33, KEY1 40, KE
 
 ## Funzioni e comandi
 
-Home: Seed BIP39, Passphrase, Verifica, Strumenti. Seed BIP39 supporta 12/15/18/21/24 parole. Passphrase offre soltanto Custom, Diceware classico (6–9 parole) e Diceware BIP39; fonte esclusivamente dadi fisici D6. Diceware BIP39 genera una password, non una mnemonic con checksum.
+Home: Seed BIP39, Passphrase, Verifica, Strumenti. Seed BIP39 supporta 12/15/18/21/24 parole. Passphrase apre direttamente la scelta di 6–9 parole Diceware, con dadi fisici D6.
 
-Frecce per scegliere, centro/KEY2 per confermare. Nei menu Su dalla prima voce o Sinistra seleziona Indietro; centro lo attiva. Nelle pagine informative e dei risultati Su seleziona Indietro. KEY3 resta una scorciatoia. Nella griglia dadi centro registra il risultato fisico, KEY1 cancella l’ultimo; Su dalla riga superiore seleziona Indietro. Uscire annulla l’operazione.
+Frecce per scegliere, centro/KEY2 per confermare. Nei menu Su dalla prima voce o Sinistra seleziona Indietro; centro lo attiva. Nelle pagine informative e dei risultati Su seleziona Indietro. KEY3 resta una scorciatoia. Nella griglia dadi centro registra il risultato fisico, KEY1 cancella l’ultimo; il cursore rimane sull’ultima faccia selezionata; Su dalla riga superiore seleziona Indietro. Uscire annulla l’operazione.
 
 Su dai riquadri superiori della home seleziona Power. Il menu Power mostra due riquadri, Restart e Power off. Entrambe le azioni richiedono conferma esplicita, con Annulla preselezionato. Dopo la conferma di Power off, il display mostra il logo Bitvero mentre il sistema si spegne.
 
-Lingue UI: italiano, inglese, francese, spagnolo. La scelta è in RAM e torna italiano al riavvio. Dizionari e segreti non vengono tradotti. Dopo lo splash SEEDGEN/by Bitvero e i controlli di avvio, il display apre la home. Il logo Bitvero compare in basso nelle schermate con spazio dedicato. Il riquadro Passphrase apre il menu Tipo passphrase.
+Lingue UI: italiano, inglese, francese, spagnolo. La scelta è in RAM e torna italiano al riavvio. Dizionari e segreti non vengono tradotti. Dopo lo splash SEEDGEN/by Bitvero e i controlli di avvio, il display apre la home. Il marchio Bitvero compare all’avvio e allo spegnimento. Per digitare le parole, usa la tastiera a schermo: centro o KEY2 seleziona, DEL o KEY1 cancella l’ultima lettera e OK accetta la parola. Le corrispondenze del dizionario appaiono sopra la tastiera appena inizi a digitare. KEY2 accetta il suggerimento unico oppure apre l’elenco completo. Le lettere incompatibili con il prefisso sono attenuate. Centro continua a digitare sulla tastiera.
+
+La Home mostra quattro riquadri su tutta l’altezza utile, con il titolo centrato e il tasto Power in alto a destra. Menu, messaggi e griglia dei dadi usano lo stesso margine inferiore.
 
 ## Test host
 
@@ -31,7 +33,7 @@ python3 -m unittest -v test_ui test_passwords test_navigation
 shasum -a 256 -c SOURCE-SHA256SUMS
 ```
 
-56 test host coprono UI/core, passphrase, navigazione e lingue, incluso il controllo BIP39 finale sulle parole reinserite. I 14 self-test originali sono eseguiti dentro la suite. I test host non richiedono GPIO o display. [Comandi, output ed esiti hardware](240x240/REPORT_TEST.txt).
+58 test host coprono UI/core, passphrase, navigazione e lingue, incluso il controllo BIP39 finale sulle parole reinserite. I 14 self-test originali sono eseguiti dentro la suite. I test host non richiedono GPIO o display. [Comandi, output ed esiti hardware](240x240/REPORT_TEST.txt).
 
 ## Compilazione
 
@@ -58,3 +60,9 @@ La forza nominale presume dadi equi e indipendenti. Il filtro diagnostico non ce
 Il porting include branding Bitvero e integra driver/build SeedSigner; la sua proposta non implica approvazione ufficiale da parte di quei progetti.
 
 Questa integrazione aggiunge solo la cartella raspberry/. I launcher e i documenti della distribuzione originale restano quelli upstream. Le [release binarie del fork](https://github.com/ilbitcoiner/SeedGen/releases) riportano il commit sorgente e gli asset di verifica associati a ciascuna immagine.
+
+### Modello operativo del Pi
+
+Il [modello di minaccia Linux](../THREAT_MODEL.md) descrive i rischi comuni. Sul Pi la rete viene controllata passivamente leggendo lo stato delle interfacce, e lo swap tramite `/proc/swaps`. Il profilo presume un avvio da microSD con immagine verificata e controllo fisico di scheda, display e dispositivo. La verifica della firma va eseguita prima di scrivere la microSD. Password e seed passano per la memoria di CPython, che non garantisce l’azzeramento sicuro.
+
+Le nuove build registrano in `/opt/SEEDGEN_PI_BUILD_INFO.txt` l’hash del core incluso e i commit effettivi di SeedSigner OS, dell’app e dei relativi submodule. Il core viene sempre da `vendor/`.

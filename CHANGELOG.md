@@ -1,5 +1,15 @@
 # Changelog del fork Raspberry
 
+## In sviluppo
+
+- Il cursore dei dadi resta sull’ultima faccia confermata.
+- La verifica mostra le corrispondenze del dizionario dalla prima lettera e permette di selezionarle con KEY2.
+
+## Pi V9.3 — Interfaccia semplificata
+
+- Conferma dei lanci semplificata e istruzioni di verifica più brevi.
+- [Immagine firmata e checksum](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.3).
+
 ## Pi V9.1 — release firmata per 240×240
 
 [Download e allegati di verifica](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1) · [Note della release](docs/releases/pi-v9.1.md)

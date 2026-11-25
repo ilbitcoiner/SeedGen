@@ -30,20 +30,16 @@ La logica originale può rifiutare un blocco: in tal caso rifare tutti i lanci r
 
 ## Passphrase
 
-Aprire il riquadro Passphrase per accedere a Tipo passphrase. Il menu offre:
-
-- **Custom:** unione dei gruppi di caratteri selezionati, forza nominale 64/128/256 bit. Non è garantito che ogni gruppo compaia almeno una volta.
-- **Diceware classico:** percorso originale, da 6 a 9 parole del dizionario Diceware lungo.
-- **Diceware BIP39:** password con parole del dizionario BIP39 e forza nominale 64/128/256 bit. Non aggiunge checksum e **non è una mnemonic wallet**.
-
-La fonte è soltanto Dadi fisici D6. Nei formati che chiedono un separatore sono disponibili Space, punto e Capitalise. La voce None richiede di scegliere un altro formato: concatenare parole di lunghezza variabile può rendere ambigui i confini.
-
-Nella visualizzazione completa delle parole, `*` rappresenta uno spazio: non copiare l’asterisco. Le righe di una password Custom vanno concatenate senza aggiungere spazi o ritorni a capo. Completare la verifica della trascrizione; per le password di parole controllare anche separatori e maiuscole.
+Aprire il riquadro Passphrase e scegliere da 6 a 9 parole Diceware. Immettere cinque lanci di dado D6 per parola. Trascrivere e verificare la copia nell’ordine mostrato.
 
 ## Verifica e strumenti
 
 Verifica BIP39 controlla parole e checksum di una mnemonic inserita. Non verifica indirizzi, saldo o provenienza del wallet.
 
-Strumenti offre test di integrità, Audit Mode, test pulsanti, Lingua e spegnimento. Audit Mode mostra parametri matematici pubblici; non è un audit di sicurezza indipendente.
+Strumenti offre test di integrità, Audit Mode, Lingua e spegnimento. Audit Mode mostra parametri matematici pubblici; non è un audit di sicurezza indipendente.
 
 Lingua permette Italiano, English, Français, Español. La preferenza resta in RAM e torna italiano al riavvio. Le wordlist sono inglesi e le parole/password non vengono tradotte.
+
+## Cursore e suggerimenti nel codice in sviluppo
+
+Dopo ogni lancio confermato il cursore resta sulla faccia registrata. Nella verifica, le corrispondenze appaiono dalla prima lettera sopra la tastiera. KEY2 accetta la corrispondenza unica o apre l’elenco. Il tasto centrale permette di continuare a digitare. La release binaria v9.3 precede queste modifiche.

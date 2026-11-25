@@ -36,7 +36,7 @@ Per creare una nuova chiave, usare localmente l’interfaccia interattiva di `gp
 
 ## 4. Pubblicazione su GitHub
 
-Nella pagina [nuova release](https://github.com/ilbitcoiner/SeedGen/releases/new) usare un nuovo tag **`pi-v9.1`** per l’aggiornamento con il logo, riferito al commit sorgente verificato, titolo **SEEDGEN Pi V9.1 — Raspberry Pi Zero / 240×240**, e note che riportino le modifiche della revisione. Iniziare come bozza e allegare i cinque asset preparati. Inserire nelle note fingerprint completo, commit sorgente, esiti delle prove e data.
+Nella pagina [nuova release](https://github.com/ilbitcoiner/SeedGen/releases/new) usare un nuovo tag per ogni nuova versione, riferito al commit sorgente verificato, titolo con versione e profilo hardware, e note che riportino le modifiche della revisione. Iniziare come bozza e allegare i cinque asset preparati. Inserire nelle note fingerprint completo, commit sorgente, esiti delle prove e data.
 
 Controllare tutti gli asset, poi pubblicare. Quando gli asset sono effettivamente disponibili aggiornare lo stato nel README. Il tag `v1.0.2` identifica l’upstream: non sostituirlo con l’immagine Raspberry.
 

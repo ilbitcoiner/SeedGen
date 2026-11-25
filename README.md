@@ -6,20 +6,22 @@ Questo repository è un fork di [SatoSats/SeedGen](https://github.com/SatoSats/S
 
 ## Versioni
 
-**SEEDGEN Pi V9.2** è la release corrente per Raspberry Pi Zero con display 240×240, basata sul core SeedGen **v1.0.2**.
+**SEEDGEN Pi V9.3** è la release corrente per Raspberry Pi Zero con display 240×240, basata sul core SeedGen **v1.0.2**.
 
-- [Release Pi V9.2 — Schermo pieno](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.2)
-- [Sorgenti e istruzioni di compilazione](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.2/raspberry/README.md) · [Rapporto dei test](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.2/raspberry/240x240/REPORT_TEST.txt) · [PR #1](https://github.com/SatoSats/SeedGen/pull/1)
+- [Release Pi V9.3 — Interfaccia semplificata](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.3)
+- [Sorgenti e istruzioni di compilazione](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.3/raspberry/README.md) · [Rapporto dei test](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.3/raspberry/240x240/REPORT_TEST.txt) · [PR #1](https://github.com/SatoSats/SeedGen/pull/1)
 - [Release precedente Pi V9.1](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.1) · [Release Pi V9](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9)
 
-### Download Pi V9.2
+La versione di sviluppo aggiunge il cursore persistente dei dadi e i suggerimenti sopra la tastiera. [Guida aggiornata](raspberry/README.md).
 
-- [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/seedgen_os.v1.0.2.pi0.v9.img)
-- [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/SHA256SUMS)
-- [Firma SHA256SUMS.asc](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/SHA256SUMS.asc)
-- [Chiave pubblica del manutentore](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.2/SEEDGEN-Pi-release-key.asc)
+### Download Pi V9.3
 
-Fingerprint GPG di Pi V9.2 `3F4E3C778F5D63EC1B0985F85823FC25A5186930`. Prima di scrivere la SD, [verificare fingerprint, firma e checksum](docs/VERIFICA.md).
+- [Immagine SD — 128 MiB](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.3/seedgen-pi-v9.3.img)
+- [Checksum SHA256SUMS](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.3/SHA256SUMS)
+- [Firma SHA256SUMS.asc](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.3/SHA256SUMS.asc)
+- [Chiave pubblica del manutentore](https://github.com/ilbitcoiner/SeedGen/releases/download/pi-v9.3/SEEDGEN-Pi-release-key.asc)
+
+Fingerprint GPG di Pi V9.3 `3F4E3C778F5D63EC1B0985F85823FC25A5186930`. Prima di scrivere la SD, [verificare fingerprint, firma e checksum](docs/VERIFICA.md).
 
 
 ## Hardware
@@ -45,7 +47,7 @@ Non usare questa immagine come profilo per Pi Zero 2 W, Pi 4/5, Luckfox o SeedSi
 
 ## Iniziare
 
-Per installare [Pi V9.2](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.2) seguire questi passaggi.
+Per installare [Pi V9.3](https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.3) seguire questi passaggi.
 
 1. Scaricare immagine, `SHA256SUMS`, `SHA256SUMS.asc` e chiave pubblica dalla stessa release.
 2. [Verificare firma, fingerprint e checksum](docs/VERIFICA.md).
@@ -56,7 +58,7 @@ La scrittura cancella il contenuto della SD scelta. Non serve installare Raspber
 
 ## Sorgenti e test
 
-Il frontend usato sul dispositivo è in [`raspberry/240x240/`](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.2/raspberry/240x240/). Il core originale congelato, i dizionari e le attribuzioni sono in `vendor/`. I file storici alla radice appartengono alla versione CLI/Linux originale: non installano l’immagine Raspberry.
+Il frontend usato sul dispositivo è in [`raspberry/240x240/`](https://github.com/ilbitcoiner/SeedGen/tree/pi-v9.3/raspberry/240x240/). Il core originale congelato, i dizionari e le attribuzioni sono in `vendor/`. I file storici alla radice appartengono alla versione CLI/Linux originale: non installano l’immagine Raspberry.
 
 ```bash
 python3 -m venv .venv
@@ -66,7 +68,7 @@ cd raspberry/240x240
 python3 -m unittest -v test_ui test_passwords test_navigation
 ```
 
-56 test host coprono il core, i formati, la navigazione e le traduzioni. Non sostituiscono le prove su Raspberry né un audit. [Dettagli](docs/TEST.md).
+58 test host sul ramo di sviluppo coprono il core, i formati, la navigazione e le traduzioni. Non sostituiscono le prove su Raspberry né un audit. [Dettagli](docs/TEST.md).
 
 ## Limiti da conoscere
 
