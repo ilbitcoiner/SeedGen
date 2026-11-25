@@ -31,6 +31,15 @@ Prova hardware e distribuzione
   pacchetto pubblicato; una ricompilazione bit-per-bit resta da verificare.
   I campi di provenienza aggiunti allo script valgono per le build future.
 
+Prova hardware v9.4
+  Il manutentore ha confermato la prova dell’immagine seedgen-pi-v9.4.img
+  su Raspberry Pi Zero v1.3 con display Waveshare ST7789 240×240.
+  Esito riferito: cursore dei dadi e suggerimenti nella verifica funzionanti.
+  SHA-256: da5162b9098ca62fe3c61d66010950a5c2f8c28929492d96665427e31c8e2874
+  Commit del tag pi-v9.4 sul fork: bdd2d30cf574075b3dc5b91946640944d435e6b4
+  Commit della PR #2: 47e7047b4f5594444286e450e5c754cb9e71ab55
+  Release firmata: https://github.com/ilbitcoiner/SeedGen/releases/tag/pi-v9.4
+
 Output completo dei test host
 test_all_languages_have_native_labels_and_accents (test_navigation.NavTests.test_all_languages_have_native_labels_and_accents) ... ok
 test_classic_route_still_generates_original_word_lengths (test_navigation.NavTests.test_classic_route_still_generates_original_word_lengths) ... ok
@@ -95,8 +104,7 @@ OK
 
 Aggiornamento del 24 novembre 2026 — cursore dadi e suggerimenti a schermo
 Verifica host sul sorgente della patch in sviluppo, basato sul commit
-b9fc2c23ca505e136b076fad6ea3f4ee91787439. La prova hardware sopra
-riguarda l’immagine v9.3 pubblicata.
+b9fc2c23ca505e136b076fad6ea3f4ee91787439. Le prove hardware delle immagini pubblicate sono indicate sopra.
 Comando: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v
 
 test_all_languages_have_native_labels_and_accents (test_navigation.NavTests.test_all_languages_have_native_labels_and_accents) ... ok
